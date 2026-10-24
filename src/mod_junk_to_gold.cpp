@@ -1,6 +1,7 @@
 #include "Chat.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "Playerbots.h"
 
 class JunkToGold : public PlayerScript
 {
@@ -9,6 +10,12 @@ public:
 
     void OnPlayerLootItem(Player* player, Item* item, uint32 count, ObjectGuid /*lootguid*/) override
     {
+        // Only sell junk for playerbots, never for real players
+        if (!player || !GET_PLAYERBOT_AI(player))
+        {
+            return;
+        }
+
         if (!item || !item->GetTemplate())
         {
             return;
